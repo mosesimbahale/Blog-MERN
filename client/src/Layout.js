@@ -14,4 +14,4 @@ const Layout = ({ search, setSearch }) => {
     )
 }
 
-export default Layout
+export default Layout;

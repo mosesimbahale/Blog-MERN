@@ -7,7 +7,7 @@
 }
 
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 body {
@@ -34,13 +34,13 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border: 1px solid rgb(184, 184, 185);
+  border: 1px solid #333;
   box-shadow: 0px 0px 15px gray;
 }
 
 .Header, .Footer {
   width: 100%;
-  background-color: dodgerblue;
+  background-color: #66d8f5;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
@@ -200,9 +200,8 @@ body {
   cursor: pointer;
 }
 
-.Missing h2, .PostPage h2, 
-.Missing p, .PostPage p {
-  margin-bottom: 1rem;
+.Missing p, .PostPage p, .NewPost p {
+  margin-top: 1rem;
 }
 
 .PostPage button {
@@ -210,10 +209,18 @@ body {
   min-width: 48px;
   border-radius: 0.25rem;
   padding: 0.5rem;
+  margin-right: 0.5rem;
   font-size: 1rem;
-  background-color: rgb(253, 76, 76);
   color: #fff;
   cursor: pointer;
+}
+
+.deleteButton {
+  background-color: red;
+}
+
+.editButton {
+  background-color: #333;
 }
 
 .statusMsg {
