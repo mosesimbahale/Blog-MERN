@@ -1,43 +1,71 @@
-import Header from './Header';
-import Nav from './Nav';
-import Footer from './Footer';
+import Layout from './Layout';
 import Home from './Home';
 import NewPost from './NewPost';
 import PostPage from './PostPage';
-import EditPost from './EditPost';
 import About from './About';
 import Missing from './Missing';
-import { Route, Routes } from 'react-router-dom';
-import { DataProvider } from './context/DataContext';
-
-
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 
 function App() {
-  
+  const [posts, setPosts] = useState([ ])
+  const [search, setSearch] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [postTitle, setPostTitle] = useState('');
+  const [postBody, setPostBody] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const filteredResults = posts.filter((post) =>
+      ((post.body).toLowerCase()).includes(search.toLowerCase())
+      || ((post.title).toLowerCase()).includes(search.toLowerCase()));
+
+    setSearchResults(filteredResults.reverse());
+  }, [posts, search])
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+    const datetime = format(new Date(), 'MMMM dd, yyyy pp');
+    const newPost = { id, title: postTitle, datetime, body: postBody };
+    const allPosts = [...posts, newPost];
+    setPosts(allPosts);
+    setPostTitle('');
+    setPostBody('');
+    navigate('/');
+  }
+
+  const handleDelete = (id) => {
+    const postsList = posts.filter(post => post.id !== id);
+    setPosts(postsList);
+    navigate('/');
+  }
+
   return (
-
-<>
-<Header title="React JS Blog" />
-
-
-<DataProvider> 
-<Nav />
     <Routes>
-
- 
-          <Route exact path="/" component={Home} />
-          <Route exact path="/post" component={NewPost} />
-          <Route path="/edit/:id" component={EditPost} />
-          <Route path="/post/:id" component={PostPage} />
-          <Route path="/about" component={About} />
-          <Route path="*" component={Missing} />
-
+      <Route path="/" element={<Layout
+        search={search}
+        setSearch={setSearch}
+      />}>
+        <Route index element={<Home posts={searchResults} />} />
+        <Route path="post">
+          <Route index element={<NewPost
+            handleSubmit={handleSubmit}
+            postTitle={postTitle}
+            setPostTitle={setPostTitle}
+            postBody={postBody}
+            setPostBody={setPostBody}
+          />} />
+          <Route path=":id" element={<PostPage
+            posts={posts}
+            handleDelete={handleDelete}
+          />} />
+        </Route>
+        <Route path="about" element={<About />} />
+        <Route path="*" element={<Missing />} />
+      </Route>
     </Routes>
-   
-</DataProvider>
-<Footer />
-</>
-    
   );
 }
 
